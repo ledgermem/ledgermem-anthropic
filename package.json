@@ -1,7 +1,7 @@
 {
-  "name": "@ledgermem/anthropic",
+  "name": "@getmnemo/anthropic",
   "version": "0.1.0",
-  "description": "LedgerMem helper for the Anthropic SDK — memory tool, prompt caching, and extended thinking wired together.",
+  "description": "Mnemo helper for the Anthropic SDK — memory tool, prompt caching, and extended thinking wired together.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,21 +18,21 @@
     "lint": "tsc --noEmit"
   },
   "keywords": [
-    "ledgermem",
+    "getmnemo",
     "anthropic",
     "claude",
     "memory",
     "tool-use",
     "prompt-caching"
   ],
-  "author": "LedgerMem <founders@proofly.dev>",
+  "author": "Mnemo <founders@getmnemo.xyz>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ledgermem/ledgermem-anthropic.git"
+    "url": "git+https://github.com/getmnemo/getmnemo-anthropic.git"
   },
   "dependencies": {
-    "@ledgermem/memory": "^0.1.0"
+    "@getmnemo/memory": "^0.1.0"
   },
   "peerDependencies": {
     "@anthropic-ai/sdk": ">=0.30.0"

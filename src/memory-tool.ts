@@ -1,4 +1,4 @@
-import type { LedgerMem } from "@ledgermem/memory";
+import type { Mnemo } from "@getmnemo/memory";
 
 /** Structural subset of `Anthropic` we depend on — keeps the peer dep loose. */
 interface AnthropicLike {
@@ -32,7 +32,7 @@ interface ChatMessage {
 
 export interface WithMemoryToolOptions {
   client: AnthropicLike;
-  ledgermem: LedgerMem;
+  getmnemo: Mnemo;
   /** Defaults to claude-sonnet-4-7. Override per call too. */
   model?: string;
   /** Defaults to 1024. */
@@ -194,7 +194,7 @@ export function withMemoryTool(
           toolCalls += 1;
           const result = await runMemoryTool(
             use.input,
-            options.ledgermem,
+            options.getmnemo,
             // Trusted server metadata (input.metadata, defaults.metadata)
             // wins over any tool input fields a model could fabricate.
             { ...defaults.metadata, ...(input.metadata ?? {}) },
@@ -243,7 +243,7 @@ function buildSystem(
 
 async function runMemoryTool(
   raw: Record<string, unknown>,
-  client: LedgerMem,
+  client: Mnemo,
   baseMetadata: Record<string, unknown>,
   defaultLimit: number,
 ): Promise<unknown> {

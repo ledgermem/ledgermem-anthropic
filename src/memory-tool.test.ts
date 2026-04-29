@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { withMemoryTool, MEMORY_TOOL_NAME } from "./memory-tool.js";
 
-function fakeLedgerMem() {
+function fakeMnemo() {
   return {
     search: vi
       .fn()
@@ -24,7 +24,7 @@ describe("withMemoryTool", () => {
         }),
       },
     };
-    const wrap = withMemoryTool({ client, ledgermem: fakeLedgerMem() });
+    const wrap = withMemoryTool({ client, getmnemo: fakeMnemo() });
     const out = await wrap.run({
       system: "You are helpful.",
       messages: [{ role: "user", content: "Hello" }],
@@ -35,7 +35,7 @@ describe("withMemoryTool", () => {
   });
 
   it("runs the memory tool loop and feeds tool_result back", async () => {
-    const ledgermem = fakeLedgerMem();
+    const getmnemo = fakeMnemo();
     const client = {
       messages: {
         create: vi
@@ -59,13 +59,13 @@ describe("withMemoryTool", () => {
           }),
       },
     };
-    const wrap = withMemoryTool({ client, ledgermem });
+    const wrap = withMemoryTool({ client, getmnemo });
     const out = await wrap.run({
       messages: [{ role: "user", content: "What do I prefer?" }],
     });
     expect(out.text).toBe("You prefer dark mode.");
     expect(out.memoryToolCalls).toBe(1);
-    expect(ledgermem.search).toHaveBeenCalledWith("ui prefs", { limit: 5 });
+    expect(getmnemo.search).toHaveBeenCalledWith("ui prefs", { limit: 5 });
     // 2nd call should include the tool_result
     const secondCall = client.messages.create.mock.calls[1]![0] as any;
     const toolResultMsg = secondCall.messages.at(-1);
@@ -83,7 +83,7 @@ describe("withMemoryTool", () => {
         }),
       },
     };
-    const wrap = withMemoryTool({ client, ledgermem: fakeLedgerMem() });
+    const wrap = withMemoryTool({ client, getmnemo: fakeMnemo() });
     await wrap.run({
       system: "stable instructions",
       messages: [{ role: "user", content: "hi" }],
@@ -104,7 +104,7 @@ describe("withMemoryTool", () => {
     };
     const wrap = withMemoryTool({
       client,
-      ledgermem: fakeLedgerMem(),
+      getmnemo: fakeMnemo(),
       thinkingBudgetTokens: 4000,
     });
     await wrap.run({ messages: [{ role: "user", content: "hi" }] });
@@ -113,7 +113,7 @@ describe("withMemoryTool", () => {
   });
 
   it("respects maxIterations and stops the loop", async () => {
-    const ledgermem = fakeLedgerMem();
+    const getmnemo = fakeMnemo();
     const client = {
       messages: {
         create: vi.fn().mockResolvedValue({
@@ -132,7 +132,7 @@ describe("withMemoryTool", () => {
     };
     const wrap = withMemoryTool({
       client,
-      ledgermem,
+      getmnemo,
       maxIterations: 2,
     });
     const out = await wrap.run({
